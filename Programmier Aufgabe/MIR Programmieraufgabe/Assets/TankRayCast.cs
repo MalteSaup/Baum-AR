@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TankRayCast : MonoBehaviour
+public class TankRayCast : MonoBehaviour				//Raycast in Z-Richtung vom Panzer aus
 {
 	RaycastHit hit;
 	Vector3 direction;
-	bool wasHit; 
+	bool wasHit; 							//Boolean ob "gehitted" werden kann
 
 	// Start is called before the first frame update
 	void Start(){
@@ -19,22 +19,19 @@ public class TankRayCast : MonoBehaviour
 		direction = this.transform.position;
 		if (Physics.Raycast(this.transform.position, this.transform.TransformDirection(direction), out hit, Mathf.Infinity))
 		{
-			if(hit.transform.name == "turm" && !wasHit){
-				Debug.Log("WICHTIG");
-				TankScript.isShooting = true;
-				wasHit = true;
-				StartCoroutine(HitExit());
+			if(hit.transform.name == "turm" && !wasHit){	//Hit nur wenn "Turm" Objekt getroffen und wasHit false ist
+				TankScript.isShooting = true;		//schießen auslösen 
+				wasHit = true;				//Verhindern eines erneuten Hiterkennens
+				StartCoroutine(HitExit());		//Startet Coroutine um das "hitten" 5 Sekunden lang zu verhindern, damit Animationen richtig ablaufen, auch bei kleineren Bewegungen
 			}
 		}
 		else
 		{
 			Debug.DrawRay(this.transform.localPosition, this.transform.TransformDirection(direction) * 10000, Color.white);
-			Debug.Log("Did not Hit");
-			//wasHit = false;
 		}
 	}
 	IEnumerator HitExit(){
 		yield return new WaitForSeconds(5f);
-		wasHit = false;
+		wasHit = false;						//wasHit zurücksetzen
 	}
 }

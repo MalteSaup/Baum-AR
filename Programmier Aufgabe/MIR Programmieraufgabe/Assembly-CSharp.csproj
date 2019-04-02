@@ -55,7 +55,6 @@
   <ItemGroup>
      <Compile Include="Assets\TankRayCast.cs" />
      <Compile Include="Assets\TankScript.cs" />
-     <Compile Include="Assets\TestTS.cs" />
      <Compile Include="Assets\TrackingsScript.cs" />
      <None Include="Assets\Vuforia\Shaders\ColoredLines.shader" />
      <None Include="Assets\Vuforia\Shaders\CameraDiffuse.shader" />

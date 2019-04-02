@@ -27,10 +27,10 @@ public class TrackingsScript : MonoBehaviour, ITrackableEventHandler {
 	void ITrackableEventHandler.OnTrackableStateChanged (TrackableBehaviour.Status prevStatus,
 		TrackableBehaviour.Status newStatus){
 		if (newStatus == TrackableBehaviour.Status.DETECTED || newStatus == TrackableBehaviour.Status.TRACKED || newStatus == TrackableBehaviour.Status.EXTENDED_TRACKED){
-			tracked = true;
+			tracked = true; //Marker ist Detected
 		}
 		else if (prevStatus == TrackableBehaviour.Status.TRACKED && newStatus == TrackableBehaviour.Status.NO_POSE){
-			tracked = false;
+			tracked = false; //Marker verloren
 		}
 		Debug.Log(newStatus);
 	}
