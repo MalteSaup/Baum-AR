@@ -1,0 +1,345 @@
+<vuforiaproject version="3">
+  <project id="3b971c307e264ce7a056ae3b2a72f357" assemblyId="54ea0e0335b64d7dbf9300dabd3fff18">
+    <source file="C:\Users\Malte\Desktop\baumARfbx.fbx" date="1555507741961"/>
+    <converted file=".converted\baumARfbx.pvz" date="1555507823213"/>
+    <units length="Meters"/>
+  </project>
+  <camera>
+    <position x="0.2974451736152415" y="0.17990933056465286" z="-0.06281436548810912"/>
+    <quaternion x="-0.13112642368186153" y="0.7962108128810418" z="0.18627073575546402" w="0.5604974714169849"/>
+    <up x="0" y="1" z="0"/>
+    <setup x="0" y="1" z="0"/>
+  </camera>
+
+  <detectionpointcamera>
+    <position x="0.4034444616986719" y="0.15643970440098726" z="0.030404462730456758"/>
+    <quaternion x="-0.1084950254475596" y="0.7056634909959444" z="0.11073658598006916" w="0.6913792558748265"/>
+    <up x="0" y="1" z="0"/>
+    <setup x="0" y="1" z="0"/>
+  </detectionpointcamera>
+
+  <detectionpoints>
+    <detectionpoint name="viewpoint_0000" rating="5">
+      <camera device="1">
+        <worldUpVector x="0" y="1" z="0"/>
+        <target x="0" y="0" z="0"/>
+        <position x="0.3662144740414104" y="0.17125404908918573" z="0.05010754714086061"/>
+        <quaternion x="-0.1353113348362081" y="0.6827430957252472" z="0.13085475888299844" w="0.7059955665455853"/>
+        <up x="0" y="1" z="0"/>
+        <setup x="0" y="1" z="0"/>
+
+        <globalposition x="0.037819406979041556" y="0.023170235396793415" z="0.4049501071178411"/>
+        <axisangle x="0.9920880841669223" y="0.18388139132312353" z="-0.9594129508921245" w="3.4130480144896915"/>
+      </camera>
+      <images>
+        <file type="shaded" name="viewpoint_0000_1.png"/>
+        <file type="edge" name="viewpoint_0000_2.png"/>
+      </images>
+    </detectionpoint>
+
+    <detectionpoint name="viewpoint_0001" rating="5">
+      <camera device="1">
+        <worldUpVector x="0" y="1" z="0"/>
+        <target x="0" y="0" z="0"/>
+        <position x="0.20084466549552474" y="0.17125404908918576" z="-0.2598433418285796"/>
+        <quaternion x="-0.051755673946639325" y="0.9442706484292875" z="0.18097921281686813" w="0.27003854772504043"/>
+        <up x="0" y="1" z="0"/>
+        <setup x="0" y="1" z="0"/>
+
+        <globalposition x="0.03309478190660348" y="0.03830820072337276" z="0.3669091283246906"/>
+        <axisangle x="-0.8450043977773812" y="-0.5663200014401576" z="2.954810923614155" w="3.038035038129239"/>
+      </camera>
+      <images>
+        <file type="shaded" name="viewpoint_0001_1.png"/>
+        <file type="edge" name="viewpoint_0001_2.png"/>
+      </images>
+    </detectionpoint>
+
+    <detectionpoint name="viewpoint_0002" rating="5">
+      <camera device="1">
+        <worldUpVector x="0" y="1" z="0"/>
+        <target x="0" y="0" z="0"/>
+        <position x="-0.15026558255052327" y="0.17125404908918573" z="-0.2716043310935936"/>
+        <quaternion x="0.04566787798065999" y="0.9527816434502876" z="0.18261043282963774" w="-0.23827508188370214"/>
+        <up x="0" y="1" z="0"/>
+        <setup x="0" y="1" z="0"/>
+
+        <globalposition x="-0.004724625072437785" y="0.04436434346735542" z="0.35169033288408874"/>
+        <axisangle x="0.8076110265772114" y="-0.6189409230514287" z="3.2293639565146868" w="3.2329601870082536"/>
+      </camera>
+      <images>
+        <file type="shaded" name="viewpoint_0002_1.png"/>
+        <file type="edge" name="viewpoint_0002_2.png"/>
+      </images>
+    </detectionpoint>
+
+    <detectionpoint name="viewpoint_0003" rating="5">
+      <camera device="1">
+        <worldUpVector x="0" y="1" z="0"/>
+        <target x="0" y="0" z="0"/>
+        <position x="-0.3360060220506855" y="0.17125404908918573" z="0.02658556861083253"/>
+        <quaternion x="0.1308547588829984" y="0.7059955665455853" z="0.13531133483620814" w="-0.6827430957252472"/>
+        <up x="0" y="1" z="0"/>
+        <setup x="0" y="1" z="0"/>
+
+        <globalposition x="-0.03781940697904155" y="0.03528252088475888" z="0.3745125162366368"/>
+        <axisangle x="0.9903526644453698" y="-0.19627579073846288" z="1.024081524650689" w="3.4040548595641913"/>
+      </camera>
+      <images>
+        <file type="shaded" name="viewpoint_0003_1.png"/>
+        <file type="edge" name="viewpoint_0003_2.png"/>
+      </images>
+    </detectionpoint>
+
+    <detectionpoint name="viewpoint_0004" rating="5">
+      <camera device="1">
+        <worldUpVector x="0" y="1" z="0"/>
+        <target x="0" y="0" z="0"/>
+        <position x="-0.17063621350479985" y="0.1712540490891857" z="0.33653645758027256"/>
+        <quaternion x="0.18097921281686816" y="0.2700385477250406" z="0.051755673946639345" w="-0.9442706484292875"/>
+        <up x="0" y="1" z="0"/>
+        <setup x="0" y="1" z="0"/>
+
+        <globalposition x="-0.0330947819066039" y="0.020144555558179383" z="0.4125534950297875"/>
+        <axisangle x="0.9998904851178161" y="-0.054804208958720256" z="0.28594447464234873" w="3.5055566822868687"/>
+      </camera>
+      <images>
+        <file type="shaded" name="viewpoint_0004_1.png"/>
+        <file type="edge" name="viewpoint_0004_2.png"/>
+      </images>
+    </detectionpoint>
+
+    <detectionpoint name="viewpoint_0005" rating="5">
+      <camera device="1">
+        <worldUpVector x="0" y="1" z="0"/>
+        <target x="0" y="0" z="0"/>
+        <position x="0.18047403454124797" y="0.17125404908918576" z="0.34829744684528685"/>
+        <quaternion x="0.18261043282963774" y="-0.2382750818837019" z="-0.04566787798065995" w="-0.9527816434502877"/>
+        <up x="0" y="1" z="0"/>
+        <setup x="0" y="1" z="0"/>
+
+        <globalposition x="0.004724625072437991" y="0.014088412814196566" z="0.4277722904703899"/>
+        <axisangle x="0.999934789177502" y="0.04792798040840709" z="-0.25006731123285336" w="3.5088744076924647"/>
+      </camera>
+      <images>
+        <file type="shaded" name="viewpoint_0005_1.png"/>
+        <file type="edge" name="viewpoint_0005_2.png"/>
+      </images>
+    </detectionpoint>
+
+  </detectionpoints>
+  <trackingarea active="false">
+    <position x="0.01510422599536243" y="0.03145544465055243" z="0.038346557875846565"/>
+    <quaternion x="0" y="0" z="0" w="1"/>
+    <scale x="1" y="1" z="1"/>
+    <corners>
+      <position x="0.5151042259953624" y="0.5314554446505524" z="0.5383465578758466"/>
+      <position x="0.5151042259953624" y="0.5314554446505524" z="-0.46165344212415343"/>
+      <position x="-0.48489577400463757" y="0.5314554446505524" z="-0.46165344212415343"/>
+      <position x="-0.48489577400463757" y="0.5314554446505524" z="0.5383465578758466"/>
+      <position x="0.5151042259953624" y="-0.46854455534944756" z="0.5383465578758466"/>
+      <position x="0.5151042259953624" y="-0.46854455534944756" z="-0.46165344212415343"/>
+      <position x="-0.48489577400463757" y="-0.46854455534944756" z="-0.46165344212415343"/>
+      <position x="-0.48489577400463757" y="-0.46854455534944756" z="0.5383465578758466"/>
+    </corners>
+  </trackingarea>
+  <dlproject active="true"/>
+  <targetvolumes>
+    <targetvolume active="false">
+      <position x="0.01510422599536243" y="0.03145544465055243" z="0.038346557875846565"/>
+      <quaternion x="0" y="0" z="0" w="1"/>
+      <scale x="1" y="1" z="1"/>
+      <size x="0.06620845023238786" y="0.23861088729290664" z="0.13430689166128137"/>
+      <corners>
+        <position x="0.5" y="0.5" z="0.5"/>
+        <position x="0.5" y="0.5" z="-0.5"/>
+        <position x="-0.5" y="0.5" z="-0.5"/>
+        <position x="-0.5" y="0.5" z="0.5"/>
+        <position x="0.5" y="-0.5" z="0.5"/>
+        <position x="0.5" y="-0.5" z="-0.5"/>
+        <position x="-0.5" y="-0.5" z="-0.5"/>
+        <position x="-0.5" y="-0.5" z="0.5"/>
+      </corners>
+    </targetvolume>
+
+    <targetvolume active="false">
+      <position x="0.01510422599536243" y="0.03145544465055243" z="0.038346557875846565"/>
+      <quaternion x="0" y="0" z="0" w="1"/>
+      <scale x="1" y="1" z="1"/>
+      <size x="0.06620845023238786" y="0.23861088729290664" z="0.13430689166128137"/>
+      <corners>
+        <position x="0.5" y="0.5" z="0.5"/>
+        <position x="0.5" y="0.5" z="-0.5"/>
+        <position x="-0.5" y="0.5" z="-0.5"/>
+        <position x="-0.5" y="0.5" z="0.5"/>
+        <position x="0.5" y="-0.5" z="0.5"/>
+        <position x="0.5" y="-0.5" z="-0.5"/>
+        <position x="-0.5" y="-0.5" z="-0.5"/>
+        <position x="-0.5" y="-0.5" z="0.5"/>
+      </corners>
+    </targetvolume>
+
+    <targetvolume active="false">
+      <position x="0.01510422599536243" y="0.03145544465055243" z="0.038346557875846565"/>
+      <quaternion x="0" y="0" z="0" w="1"/>
+      <scale x="1" y="1" z="1"/>
+      <size x="0.06620845023238786" y="0.23861088729290664" z="0.13430689166128137"/>
+      <corners>
+        <position x="0.5" y="0.5" z="0.5"/>
+        <position x="0.5" y="0.5" z="-0.5"/>
+        <position x="-0.5" y="0.5" z="-0.5"/>
+        <position x="-0.5" y="0.5" z="0.5"/>
+        <position x="0.5" y="-0.5" z="0.5"/>
+        <position x="0.5" y="-0.5" z="-0.5"/>
+        <position x="-0.5" y="-0.5" z="-0.5"/>
+        <position x="-0.5" y="-0.5" z="0.5"/>
+      </corners>
+    </targetvolume>
+
+    <targetvolume active="false">
+      <position x="0.01510422599536243" y="0.03145544465055243" z="0.038346557875846565"/>
+      <quaternion x="0" y="0" z="0" w="1"/>
+      <scale x="1" y="1" z="1"/>
+      <size x="0.06620845023238786" y="0.23861088729290664" z="0.13430689166128137"/>
+      <corners>
+        <position x="0.5" y="0.5" z="0.5"/>
+        <position x="0.5" y="0.5" z="-0.5"/>
+        <position x="-0.5" y="0.5" z="-0.5"/>
+        <position x="-0.5" y="0.5" z="0.5"/>
+        <position x="0.5" y="-0.5" z="0.5"/>
+        <position x="0.5" y="-0.5" z="-0.5"/>
+        <position x="-0.5" y="-0.5" z="-0.5"/>
+        <position x="-0.5" y="-0.5" z="0.5"/>
+      </corners>
+    </targetvolume>
+
+    <targetvolume active="false">
+      <position x="0.01510422599536243" y="0.03145544465055243" z="0.038346557875846565"/>
+      <quaternion x="0" y="0" z="0" w="1"/>
+      <scale x="1" y="1" z="1"/>
+      <size x="0.06620845023238786" y="0.23861088729290664" z="0.13430689166128137"/>
+      <corners>
+        <position x="0.5" y="0.5" z="0.5"/>
+        <position x="0.5" y="0.5" z="-0.5"/>
+        <position x="-0.5" y="0.5" z="-0.5"/>
+        <position x="-0.5" y="0.5" z="0.5"/>
+        <position x="0.5" y="-0.5" z="0.5"/>
+        <position x="0.5" y="-0.5" z="-0.5"/>
+        <position x="-0.5" y="-0.5" z="-0.5"/>
+        <position x="-0.5" y="-0.5" z="0.5"/>
+      </corners>
+    </targetvolume>
+
+    <targetvolume active="false">
+      <position x="0.01510422599536243" y="0.03145544465055243" z="0.038346557875846565"/>
+      <quaternion x="0" y="0" z="0" w="1"/>
+      <scale x="1" y="1" z="1"/>
+      <size x="0.06620845023238786" y="0.23861088729290664" z="0.13430689166128137"/>
+      <corners>
+        <position x="0.5" y="0.5" z="0.5"/>
+        <position x="0.5" y="0.5" z="-0.5"/>
+        <position x="-0.5" y="0.5" z="-0.5"/>
+        <position x="-0.5" y="0.5" z="0.5"/>
+        <position x="0.5" y="-0.5" z="0.5"/>
+        <position x="0.5" y="-0.5" z="-0.5"/>
+        <position x="-0.5" y="-0.5" z="-0.5"/>
+        <position x="-0.5" y="-0.5" z="0.5"/>
+      </corners>
+    </targetvolume>
+
+  </targetvolumes>
+  <camrendervols>
+    <camrendervol origincaptured="true" absdist="0">
+      <origin x="0.39299330005224686" y="0.03145544465055243" z="0.05100454598095469"/>
+      <position x="0.01510422599536243" y="0.03145544465055243" z="0.038346557875846565"/>
+      <quaternion x="0" y="0.69516983729361" z="0" w="0.7188455309154922"/>
+      <dist_range min="0.28357576066524387" max="0.5671515213304877"/>
+
+      <azim_range min="-0.5235987755982988" max="0.5235987755982988"/>
+
+      <elev_range min="-0.9023266282488394" max="0.14487092294775833"/>
+
+      <roll_range min="-0.2617993877991485" max="0.26179938779915035"/>
+
+    </camrendervol>
+
+    <camrendervol origincaptured="true" absdist="0">
+      <origin x="0.2150109022836304" y="0.03145544465055243" z="-0.28258598601744"/>
+      <position x="0.01510422599536243" y="0.03145544465055243" z="0.038346557875846565"/>
+      <quaternion x="0" y="0.9614575044987069" z="0" w="0.27495357252292446"/>
+      <dist_range min="0.283575760665244" max="0.567151521330488"/>
+
+      <azim_range min="-0.5235987755982988" max="0.5235987755982988"/>
+
+      <elev_range min="-0.9023266282488392" max="0.14487092294775844"/>
+
+      <roll_range min="-0.26179938779914896" max="0.2617993877991499"/>
+
+    </camrendervol>
+
+    <camrendervol origincaptured="true" absdist="0">
+      <origin x="-0.16287817177325237" y="0.03145544465055243" z="-0.2952439741225499"/>
+      <position x="0.01510422599536243" y="0.03145544465055243" z="0.038346557875846565"/>
+      <quaternion x="0" y="0.9701234098165342" z="0" w="-0.2426119735832113"/>
+      <dist_range min="0.2835757606652439" max="0.5671515213304879"/>
+
+      <azim_range min="-0.5235987755982988" max="0.5235987755982988"/>
+
+      <elev_range min="-0.9023266282488394" max="0.14487092294775833"/>
+
+      <roll_range min="-0.2617993877991499" max="0.26179938779914896"/>
+
+    </camrendervol>
+
+    <camrendervol origincaptured="true" absdist="0">
+      <origin x="-0.3627848480615219" y="0.03145544465055243" z="0.02568856977073447"/>
+      <position x="0.01510422599536243" y="0.03145544465055243" z="0.038346557875846565"/>
+      <quaternion x="0" y="-0.7188455309154959" z="0" w="0.6951698372936062"/>
+      <dist_range min="0.2835757606652439" max="0.5671515213304879"/>
+
+      <azim_range min="-0.5235987755982988" max="0.5235987755982988"/>
+
+      <elev_range min="-0.9023266282488394" max="0.14487092294775833"/>
+
+      <roll_range min="-0.2617993877991504" max="0.26179938779914846"/>
+
+    </camrendervol>
+
+    <camrendervol origincaptured="true" absdist="0">
+      <origin x="-0.18480245029290726" y="0.03145544465055243" z="0.35927910176913186"/>
+      <position x="0.01510422599536243" y="0.03145544465055243" z="0.038346557875846565"/>
+      <quaternion x="0" y="-0.2749535725229273" z="0" w="0.9614575044987063"/>
+      <dist_range min="0.28357576066524387" max="0.5671515213304877"/>
+
+      <azim_range min="-0.5235987755982988" max="0.5235987755982988"/>
+
+      <elev_range min="-0.9023266282488394" max="0.14487092294775833"/>
+
+      <roll_range min="-0.26179938779914996" max="0.2617993877991489"/>
+
+    </camrendervol>
+
+    <camrendervol origincaptured="true" absdist="0">
+      <origin x="0.19308662376397864" y="0.03145544465055243" z="0.3719370898742423"/>
+      <position x="0.01510422599536243" y="0.03145544465055243" z="0.038346557875846565"/>
+      <quaternion x="0" y="0.2426119735832134" z="0" w="0.9701234098165339"/>
+      <dist_range min="0.2835757606652439" max="0.5671515213304879"/>
+
+      <azim_range min="-0.5235987755982988" max="0.5235987755982988"/>
+
+      <elev_range min="-0.9023266282488392" max="0.14487092294775844"/>
+
+      <roll_range min="-0.261799387799149" max="0.26179938779914985"/>
+
+    </camrendervol>
+
+  </camrendervols>
+  <orbitcontrols>
+    <target x="0.01510422599536243" y="0.03145544465055243" z="0.038346557875846565"/>
+    <worldUpVector x="0" y="1" z="0"/>
+  </orbitcontrols>
+  <orbitdetection>
+    <target x="0.01510422599536243" y="0.03145544465055243" z="0.038346557875846565"/>
+    <worldUpVector x="0" y="1" z="0"/>
+  </orbitdetection>
+</vuforiaproject>
