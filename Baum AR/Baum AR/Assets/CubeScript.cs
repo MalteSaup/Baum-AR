@@ -8,11 +8,13 @@ public class CubeScript : MonoBehaviour
 	Renderer c_renderer;
 	float angle;
 	GameObject blaetter;
-    void Start(){
-		this.blaetter = (GameObject)transform.Find("blaetter").gameObject;
-		Debug.Log(blaetter);
-		c_renderer = this.blaetter.GetComponent<Renderer>();
-    }
+	ArrayList leaves = new ArrayList();
+	ArrayList changed = new ArrayList();
+	void Start(){
+		for(int i = 1; i < 2000){
+			
+		}		
+    	}
 
 	// Update is called once per frame
     	void Update(){
