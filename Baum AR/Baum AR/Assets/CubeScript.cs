@@ -2,57 +2,200 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-//leaves[i].setActive(true);
+
 //0f, 255/255f, 80/255f fresh green 
 //2/255, 206/255, 0 summer green 
 //206/255f, 121/255f, 10/255f herbst braun 
-//
+
 
 public class CubeScript : MonoBehaviour
 {
-	// Start is called before the first frame update
-	Renderer c_renderer;
+	int count = 16;
+	int previousAngle = 0;
 	int angle;
+
 	static int numberOfLeaves = 1500;
+
 	GameObject[] leaves = new GameObject[numberOfLeaves];
-	IEnumerator[] coroutines = new IEnumerator[numberOfLeaves];
+
+	IEnumerator[] coroutines = new IEnumerator[45];
+
 	Vector3[] positions = new Vector3[numberOfLeaves];
 
-	bool[] changed1 = new bool[90];
-	bool[] changed2 = new bool[90];
+	bool[] changed = new bool[45];
 	bool tracked = false;
 	bool check = false;
-	bool f1 = false;
-	bool f2 = false;
-
-	int count = 17;
-	int previousAngle = 0;
+	bool cCheck;
+	bool running; 
 
 	Color fruehling = new Color(0f,1f,0.314f);
 	Color sommer = new Color(0.008f, 0.808f, 0f);
 	Color herbst = new Color(0.808f, 0.475f, 0.039f);
 
-	void Start(){
+	void Start(){}
+
+
+
+
+	public void changeColor(int angle, Color color, int startPoint = 0){
+		if(startPoint == 0){
+			for(int i = 0; i <= angle % 45; i++){
+				if(!changed[i]){
+					//Debug.Log(i + " : " + color);
+					changed[i] = true;
+					colorChangeRoutine(i, color);
+				}
+			}
+		}
+		else{
+			if(startPoint % 45 > 5){
+				for(int i = startPoint % 45; i < 45; i++){
+					if(changed[i]){
+						changed[i] = false;
+						colorChangeRoutine(i, color);
+					}
+				}
+			}
+		}
+	}
+
+	void colorChangeRoutine(int i, Color color){
+		for(int j = 0; j <= count; j++){
+			try{
+				leaves[i + 90 * j].GetComponent<Renderer>().material.color = color;
+				leaves[i + 45 + 90 * j].GetComponent<Renderer>().material.color = color;
+			}
+			catch(Exception e){}
+		}
+	}
+
+	void colorChangeComplete(Color color){
+		for(int i = 0; i <= numberOfLeaves; i++){
+			try{leaves[i].GetComponent<Renderer>().material.color = color;}
+			catch(Exception e){}
+		}
+	}
+		
+	public void changePositionComplete(){
+		for(int j = 0; j <= numberOfLeaves; j++){
+			try{
+				leaves[j].GetComponent<Renderer>().enabled = true;
+				leaves[j].transform.localPosition = positions[j];
+			}
+			catch(Exception e){}
+		}
+	}
+
+	public void changeControlFlag(bool flag){
+		for(int i = 0; i < 45; i++){
+			changed[i] = flag;
+		}
+	}
+
+	public void colorCheckComplete(Color color, int activeFlag = 1){
+		if(!cCheck && activeFlag == 1){
+			colorChangeComplete(color);
+			cCheck = true;
+		}
+		else if(!cCheck && activeFlag == 0){
+			changePositionComplete();
+			colorChangeComplete(color);
+			cCheck = true;
+		}
+
+		else if(!cCheck && activeFlag == -1){
+			for(int i = 0; i <= numberOfLeaves; i++){
+				try{
+					leaves[i].GetComponent<Renderer>().enabled= false;
+				}
+				catch(Exception e){}
+			}
+			cCheck = true;
+		}
+
+		else if(cCheck){cCheck = false;}
+	}
+
+	public void fallingLeavesStart(int angle){
+		for(int i = 0; i <= angle % 45; i++){
+			if(!changed[i] && leaves[i] != null){
+				if(leaves[i].GetComponent<Renderer>().enabled && !leaves[i].GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("fallingLeave")){
+					for(int j = 0; j <= count; j++){
+						try{
+							leaves[i + 90 * j].GetComponent<Animator>().Play("fallingLeave");
+							leaves[i + 45 + 90 * j].GetComponent<Animator>().Play("fallingLeave");
+
+						}
+						catch(Exception e){}
+					}
+					StartCoroutine(coroutines[i]);
+
+				}
+			}
+		}
 
 	}
 
-	// Update is called once per frame
+	public void changePosition(Color color, int i, int startPoint = 0, bool deactiveFlag = true){
+		if(startPoint == 0){
+			for(int j = 0; j <= i % 45; j++){
+				try{
+					if(deactiveFlag){
+						leaves[i + 90 * j].transform.localPosition = positions[i + 90 * j];
+						leaves[i + 45 + 90 * j].transform.localPosition = positions[i + 90 * j];
+						leaves[i + 90 * j].GetComponent<Renderer>().enabled = true;
+						leaves[i + 45 + 90 * j].GetComponent<Renderer>().enabled = true;
+						if(color != Color.black){
+							changeColor(i, color);
+						}
+					}
+				}
+				catch(Exception e){}	
+			}
+			changed[i % 45] = true;
+		}
+		else if(startPoint > 5){
+			if(startPoint % 45 > 5){
+				//Debug.Log("DF: " + deactiveFlag + " Changed: " + changed[i % 45]);
+				if(changed[i % 45]){
+					//Debug.Log(startPoint % 45 + " SP");
+					for(int j = startPoint % 45; j < 45; j++){
+						try{
+							//Debug.Log(i + "HASS");
+							leaves[i + 90 * j].GetComponent<Renderer>().enabled = deactiveFlag;
+							leaves[i + 45 + 90 * j].GetComponent<Renderer>().enabled = deactiveFlag;
+						}
+						catch(Exception e){}
+					}
+					changed[i % 45] = false;
+				}
+			}
+		}
+	}
+
+
+
+
 	void Update(){
 		tracked = TrackingsScript.tracked;
 		if(tracked){
 			if(!check){
+				angle = (int)transform.eulerAngles.y;
+				if(angle % 90 >= 45){cCheck = true;}
 				string tag;
+				for(int i = 0; i < 45; i++){
+					coroutines[i] = deactivateLeaves(i);
+				}
 				for(int i = 1; i <= numberOfLeaves; i++){
 					if(i < 10){tag = "blaetter.00" + i;}
 					else if(i < 100){tag = "blaetter.0" + i;}
 					else{tag = "blaetter." + i;}
 					try{
 						leaves[i] = GameObject.Find(tag);
-						coroutines[i] = deactivateLeave(i);
 						positions[i] = leaves[i].transform.localPosition;
 					}
 					catch(Exception e){
-						Debug.Log(tag);
+						//Debug.Log(tag);
 					}
 				}
 				check = true;
@@ -61,7 +204,7 @@ public class CubeScript : MonoBehaviour
 			if(check){
 
 				angle = (int)transform.eulerAngles.y;
-				Debug.Log(angle);
+				//Debug.Log(angle );
 				//if(previousAngle > 350 && angle < 20){previousAngle = angle;}
 
 
@@ -75,311 +218,115 @@ public class CubeScript : MonoBehaviour
 
 
 				if(angle >= 0 && angle < 45){	//Frühling
-					if(!f2){checkf1f2(2, fruehling, 2);}
+					if(!cCheck){colorCheckComplete(fruehling, 0);}
+					if(angle % 45 > 22){changeControlFlag(false);}
+					else if(angle % 45 < 22){changeControlFlag(true);}
 				}
 
 
 
 
 				if(angle >= 45 && angle < 90){   //F->S
-					if(previousAngle <= angle){
-						changeColor(angle, 1, sommer);
-					}
-					else{
-						changeColor(angle, 1, fruehling, previousAngle);
-					}
+					if(cCheck){colorCheckComplete(Color.black, 0);}
+					if(previousAngle <= angle){changeColor(angle, sommer);}
+					else{changeColor(angle, fruehling, previousAngle);}
 				}
 
 				if(angle >= 90 && angle < 135){	//Sommer
-					if(!f1){checkf1f2(1, sommer);}
+					if(!cCheck){colorCheckComplete(sommer);}
+
+					if(angle % 45 > 22){changeControlFlag(false);}
+
+					else if(angle % 45 < 22){changeControlFlag(true);}
 				}
 
 
 				if(angle >= 135 && angle < 180){   //S->H
-					if(previousAngle <= angle){
-						changeColor(angle, 2, herbst);
-					}
-					else{
-						changeColor(angle, 2, sommer, previousAngle);}
-				}
+					if(cCheck){colorCheckComplete(Color.black, 0);}
+					if(previousAngle <= angle){changeColor(angle, herbst);}
+					else{changeColor(angle, sommer, previousAngle);}}
 
 				if(angle >= 180 && angle < 225){ //Herbst
-					if(!f2){checkf1f2(2, herbst);}
+					if(!cCheck){
+						colorCheckComplete(herbst, 0);
+					}
+					if(angle % 45 > 22){changeControlFlag(false);}
+					else if(angle % 45 < 22){changeControlFlag(true);}
 				}
 
 				if(angle >= 225 && angle < 270){   //H->W
+					if(cCheck){colorCheckComplete(Color.black, 0);}
 					if(previousAngle <= angle){
 						fallingLeavesStart(angle);
 					}
 					else{
-						//bringLeavesBack(angle, herbst);
+						changePosition(herbst, angle, previousAngle, true);
 					}
 				}
 
 				if(angle >= 270 && angle < 315){ //Winter
-					if(!f1){checkf1f2(1, herbst, 1);}
+					if(!cCheck){
+						colorCheckComplete(fruehling, -1);
+					}
+					if(angle % 45 > 22){changeControlFlag(false);}
+					else if(angle % 45 < 22){changeControlFlag(true);}
 				}
 
 				if(angle >= 315 && angle < 360){ //W->F
+					if(cCheck){colorCheckComplete(Color.black, 0);}
 					if(previousAngle <= angle){
-						bringLeavesBack(angle, fruehling);
-					}
+						changePosition(fruehling, angle);
+						changeColor(angle, fruehling);}
 					else{
-						bringLeavesBack(angle, fruehling, previousAngle);
+						changePosition(Color.black, angle, previousAngle, false);
 					}
 				}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+					
 
 				previousAngle = angle;		
 			}
 
 		}
 	}
-	public void checkf1f2(int fNumb, Color color, int activateNumb = 0){
-		if(fNumb == 1){
-			f2 = false;
-			f1 = true;
-		}
-		else if(fNumb == 2){
-			f1 = false;
-			f2 = true;
-		}
-		if(activateNumb == 0){
-			for(int i = 0; i <= numberOfLeaves; i++){
-				try{leaves[i].GetComponent<Renderer>().material.color = color;}
-				catch(Exception e){
-
-				}
-			}
-		}
-		else if(activateNumb == 1){ 	//Deaktivierung Blätter
-			for(int i = 0; i <= numberOfLeaves; i++){
-				try{leaves[i].active = false;}
-				catch(Exception e){
-
-				}
-			}
-		}
-
-		else if(activateNumb == 2){	//Aktivierung Blätter + Färbung
-			for(int i = 0; i <= numberOfLeaves; i++){
-				try{
-					//Debug.Log(i + " : " + leaves[i].active);
-					leaves[i].active = true;
-					//Debug.Log(i + " : " + leaves[i].active);
-					leaves[i].transform.localPosition = positions[i];
-					leaves[i].GetComponent<Renderer>().material.color = color;
-				}
-				catch(Exception e){
-
-				}
-			}
-		}
-	}
 
 
-	public void fallingLeavesStart(int angle){
-
-		for(int i = 0; i <= angle % 45; i++){
-			if(!changed1[i]){
-				changed2[i] = false;
-				changed1[i] = true;
-				count = 17;
-				for(int j = 0; j <= count; j++){
-					try{
-						leaves[i + 90 * j].GetComponent<Animator>().Play("fallingLeave");
-						leaves[i + 45 + 90 * j].GetComponent<Animator>().Play("fallingLeave");
-						StartCoroutine(coroutines[i + 90 * j]);
-						StartCoroutine(coroutines[i + 45 + 90 * j]);
-					}
-					catch(Exception e){}
-				}
-			}
-		}
-
-	}
 
 
-	public IEnumerator deactivateLeave(int number){
+
+
+	public IEnumerator deactivateLeaves(int number){
 		yield return new WaitForSeconds(1.3f);
-		leaves[number].active = false;
-		//Debug.Log(number);
-	}
-
-	public void bringLeavesBack(int angle, Color color, int startPoint = 0){
-		if(startPoint == 0){
-			for(int i = 0; i < angle % 45; i++){
-				if(!changed2[i]){
-					count = 17;
-					for(int j = 0; j <= count; j++){
-						try{
-							if(!leaves[i + 45 * j].active){
-								changed2[i] = true;
-								changed1[i] = false;
-								leaves[i + 90 * j].active = true;
-								leaves[i + 45 + 90 * j].active = true;
-								leaves[i + 90 * j].transform.localPosition = positions[i + 90 * j];
-								leaves[i + 45 + 90 * j].transform.localPosition = positions[i + 45 + 90 * j];
-								leaves[i + 90 * j].GetComponent<Renderer>().material.color = color;
-								leaves[i + 45 + 90 * j].GetComponent<Renderer>().material.color = color;
-							}
-						}
-						catch(Exception e){}
-					}	
-				}
+		changed[number] = true;
+		for(int i = 0; i <= count; i++){
+			try{
+				leaves[number + 90 * i].GetComponent<Renderer>().enabled = false;
+				leaves[number + 45 + 90 * i].GetComponent<Renderer>().enabled = false;
 			}
-		}
-		else{
-			for(int i = startPoint % 45; i < 45; i++){
-				if(changed2[i]){
-					count = 17;
-					for(int j = 0; j <= count; j++){
-						try{
-							if(leaves[i].active){
-								changed2[i] = false;
-								changed1[i] = true;
-								leaves[i + 90 * j].active = false;
-								leaves[i + 45 + 90 * j].active = false;
-							}
-						}
-						catch(Exception e){}
-					}	
-				}
-			}
-		}
-
-	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	public void changeColor(int angle, int fNumb, Color color, int startPoint = 0){
-		//Debug.Log("sP " + startPoint + " : " + angle + " : " + color);
-		if(startPoint == 0){
-			//Debug.Log("Vorwarts");
-			if(fNumb == 1){
-				for(int i = 0; i <= angle % 45; i++){
-					if(!changed1[i]){
-						changed1[i] = true;
-						changed2[i] = false;
-						if(i < 60) count = 17;
-						else count = 16;
-						for(int j = 0; j <= count; j++){
-							try{
-								leaves[i + 90 * j].GetComponent<Renderer>().material.color = color;
-								leaves[i + 45 + 90 * j].GetComponent<Renderer>().material.color = color;
-							}
-							catch(Exception e){}
-						}
-					}
-				}
-			}
-			else if(fNumb == 2){
-				for(int i = startPoint; i <= angle % 45; i++){
-					if(!changed2[i]){
-						changed1[i] = false;
-						changed2[i] = true;
-						if(i < 60) count = 17;
-						else count = 16;
-						for(int j = 0; j <= count; j++){
-							try{
-								leaves[i + 90 * j].GetComponent<Renderer>().material.color = color;
-								leaves[i + 45 + 90 * j].GetComponent<Renderer>().material.color = color;
-							}
-							catch(Exception e){}
-						}
-					}
-				}
-			}
-		}
-		else{
-			//Debug.Log("Zuruck");
-			if(fNumb == 1 && startPoint % 45 > 5){
-				//Debug.Log("SP " + startPoint + " Angle: " + angle);
-				for(int i = startPoint % 45; i < 45; i++){
-					if(changed1[i]){
-						//Debug.Log(i);
-						changed1[i] = false;
-						changed2[i] = true;
-						count = 17;
-						for(int j = 0; j <= count; j++){
-							try{
-								leaves[i + 90 * j].GetComponent<Renderer>().material.color = color;
-								leaves[i + 45 + 90 * j].GetComponent<Renderer>().material.color = color;
-							}
-							catch(Exception e){}
-						}
-					}
-				}
-			}
-			else if(fNumb == 2 && startPoint % 45 > 5){
-				for(int i = startPoint % 45; i < 45; i++){
-					if(changed2[i]){
-						//Debug.Log(i);
-						changed1[i] = true;
-						changed2[i] = false;
-						if(i < 60) count = 17;
-						else count = 16;
-						for(int j = 0; j <= count; j++){
-							try{
-								leaves[i + 90 * j].GetComponent<Renderer>().material.color = color;
-								leaves[i + 45 + 90 * j].GetComponent<Renderer>().material.color = color;
-							}
-							catch(Exception e){}
-						}
-					}
-				}
-			}
+			catch(Exception e){}
 		}
 	}
-}						
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+					
