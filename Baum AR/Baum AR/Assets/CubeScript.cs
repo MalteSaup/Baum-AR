@@ -18,6 +18,8 @@ public class CubeScript : MonoBehaviour
 
 	GameObject[] leaves = new GameObject[numberOfLeaves];
 
+	Renderer snow; 
+
 	IEnumerator[] coroutines = new IEnumerator[45];
 
 	Vector3[] positions = new Vector3[numberOfLeaves];
@@ -27,6 +29,7 @@ public class CubeScript : MonoBehaviour
 	bool check = false;
 	bool cCheck;
 	bool running; 
+	bool herbstCheck = false;
 
 	Color fruehling = new Color(0f,1f,0.314f);
 	Color sommer = new Color(0.008f, 0.808f, 0f);
@@ -198,6 +201,7 @@ public class CubeScript : MonoBehaviour
 						//Debug.Log(tag);
 					}
 				}
+				snow = GameObject.Find("Schnee").GetComponent<Renderer>();
 				check = true;
 			}
 
@@ -247,9 +251,8 @@ public class CubeScript : MonoBehaviour
 					else{changeColor(angle, sommer, previousAngle);}}
 
 				if(angle >= 180 && angle < 225){ //Herbst
-					if(!cCheck){
-						colorCheckComplete(herbst, 0);
-					}
+					if(!cCheck){colorCheckComplete(herbst, 0);}
+					if(!herbstCheck){herbstCheck = true;}
 					if(angle % 45 > 22){changeControlFlag(false);}
 					else if(angle % 45 < 22){changeControlFlag(true);}
 				}
@@ -268,8 +271,22 @@ public class CubeScript : MonoBehaviour
 					if(!cCheck){
 						colorCheckComplete(fruehling, -1);
 					}
-					if(angle % 45 > 22){changeControlFlag(false);}
-					else if(angle % 45 < 22){changeControlFlag(true);}
+					if(angle % 45 > 22){
+						changeControlFlag(false);
+						if(herbstCheck){
+							colorChangeComplete(fruehling);
+							herbstCheck = false;
+						}
+					}
+					else if(angle % 45 < 22){
+						changeControlFlag(true);
+						if(!herbstCheck){
+							colorChangeComplete(herbst);
+							herbstCheck = true;
+						}
+					
+					}
+					if(!snow.enabled){snow.enabled = true;}
 				}
 
 				if(angle >= 315 && angle < 360){ //W->F
@@ -281,6 +298,8 @@ public class CubeScript : MonoBehaviour
 						changePosition(Color.black, angle, previousAngle, false);
 					}
 				}
+
+				if(angle < 270 && snow.enabled){snow.enabled = false;}
 					
 
 				previousAngle = angle;		
