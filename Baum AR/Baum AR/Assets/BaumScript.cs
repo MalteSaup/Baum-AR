@@ -8,9 +8,9 @@ using UnityEngine;
 //206/255f, 121/255f, 10/255f herbst braun 
 
 
-public class CubeScript : MonoBehaviour
+public class BaumScript : MonoBehaviour
 {
-	int count = 16;
+	int count = 16;								//Veränderungsvariable
 	int previousAngle = 0;
 	int angle;
 
@@ -28,7 +28,6 @@ public class CubeScript : MonoBehaviour
 	bool tracked = false;
 	bool check = false;
 	bool cCheck;
-	bool running; 
 	bool herbstCheck = false;
 
 	Color fruehling = new Color(0f,1f,0.314f);
@@ -37,10 +36,7 @@ public class CubeScript : MonoBehaviour
 
 	void Start(){}
 
-
-
-
-	public void changeColor(int angle, Color color, int startPoint = 0){
+	public void changeColor(int angle, Color color, int startPoint = 0){  	//Ruft Farbänderung auf und verhindert mit dem changed Array doppelte einfärbung
 		angle = (angle - 15) % 90;
 		if(startPoint == 0 && angle < 60){
 			for(int i = 0; i <= angle; i++){
@@ -62,24 +58,24 @@ public class CubeScript : MonoBehaviour
 		}
 	}
 
-	void colorChangeRoutine(int i, Color color){
+	void colorChangeRoutine(int i, Color color){ 				//Wird von changeColor aufgerufen und führt Färbung durch
 		for(int j = 0; j <= count; j++){
 			try{
 				leaves[i + 90 * j].GetComponent<Renderer>().material.color = color;
-				if(i < 30){leaves[i + 60 + 90 * j].GetComponent<Renderer>().material.color = color;}
+				if(i < 30){leaves[i + 60 + 90 * j].GetComponent<Renderer>().material.color = color;}	//Dient dazu damit alle Blätter verändert werden
 			}
 			catch(Exception e){}
 		}
 	}
 
-	void colorChangeComplete(Color color){
+	void colorChangeComplete(Color color){					//Färbt alle Blätter ein und nicht nur ein Bereich
 		for(int i = 0; i <= numberOfLeaves; i++){
 			try{leaves[i].GetComponent<Renderer>().material.color = color;}
 			catch(Exception e){}
 		}
 	}
 		
-	public void changePositionComplete(){
+	public void changePositionComplete(){					//Macht Blätter sichtbar und verändert ihre Position (durch Animation verändert)
 		for(int j = 0; j <= numberOfLeaves; j++){
 			try{
 				leaves[j].GetComponent<Renderer>().enabled = true;
@@ -89,13 +85,13 @@ public class CubeScript : MonoBehaviour
 		}
 	}
 
-	public void changeControlFlag(bool flag){
+	public void changeControlFlag(bool flag){				//Setzt changed Array zurück 
 		for(int i = 0; i < 60; i++){
 			changed[i] = flag;
 		}
 	}
 
-	public void colorCheckComplete(Color color, int activeFlag = 1){
+	public void colorCheckComplete(Color color, int activeFlag = 1){	//Ruft je nach Flag colorChangeComplete oder changePositionComplete auf, oder dekativiert alle Blätter. Ändert cCheck Wert
 		if(!cCheck && activeFlag == 1){
 			colorChangeComplete(color);
 			cCheck = true;
@@ -119,7 +115,7 @@ public class CubeScript : MonoBehaviour
 		else if(cCheck){cCheck = false;}
 	}
 
-	public void fallingLeavesStart(int angle){
+	public void fallingLeavesStart(int angle){				//Startet Animation der Blätter zum abfallen
 		
 		if((angle - 15) % 90 <= 60){
 			for(int i = 0; i <= (angle - 15) % 90; i++){
@@ -132,14 +128,14 @@ public class CubeScript : MonoBehaviour
 							}
 							catch(Exception e){}
 						}
-						StartCoroutine(coroutines[i]);
+						StartCoroutine(coroutines[i]);	//Startet Coroutine
 					}
 				}
 			}
 		}
 	}
 
-	public void changePosition(Color color, int angle, int startPoint = 0, bool deactiveFlag = true){
+	public void changePosition(Color color, int angle, int startPoint = 0, bool deactiveFlag = true){	//Verändert je nach Flag, Position und Renderstatus der Blätter
 		angle = (angle - 15) % 90;
 		if(startPoint == 0 && angle <= 60){
 			for(int j = 0; j < angle; j++){
@@ -164,7 +160,6 @@ public class CubeScript : MonoBehaviour
 			if(changed[angle]){
 				for(int j = startPoint % 90; j < 60; j++){
 					try{
-						//Debug.Log(i + "HASS");
 						leaves[angle + 90 * j].GetComponent<Renderer>().enabled = deactiveFlag;
 						if(angle <= 30){leaves[angle + 60 + 90 * j].GetComponent<Renderer>().enabled = deactiveFlag;}
 					}
@@ -175,19 +170,27 @@ public class CubeScript : MonoBehaviour
 		}
 	}
 
-
-
-
+	public IEnumerator deactivateLeaves(int number){							//Coroutine damit Blätter nach Animation verschwinden
+		yield return new WaitForSeconds(1.3f);								//Animation dauert 1s und deaktivierung erfolgt nach 1.3s
+		changed[number] = true;
+		for(int i = 0; i <= count; i++){
+			try{
+				leaves[number + 90 * i].GetComponent<Renderer>().enabled = false;
+				if(number <= 30){leaves[number + 60 + 90 * i].GetComponent<Renderer>().enabled = false;}
+			}
+			catch(Exception e){}
+		}
+	}
+		
 	void Update(){
 		tracked = TrackingsScript.tracked;
 		if(tracked){
-			if(!check){
-				
+			if(!check){						//Wird beim ersten Erkennen des Baums aufgerufen. Füllt Arrayss
 				angle = (int)transform.eulerAngles.y;
-				if(angle % 90 >= 15 && angle % 90 < 75){cCheck = true;} 
+				if(angle % 90 >= 15 && angle % 90 < 75){cCheck = true;} //Prüft ob Baum in Jahreszeit oder Übergang ist 
 				string tag;
 				for(int i = 0; i < 60; i++){
-					coroutines[i] = deactivateLeaves(i);
+					coroutines[i] = deactivateLeaves(i);	//Versieht Coroutinen mit ihrer Funktion 
 				}
 				for(int i = 1; i <= numberOfLeaves; i++){
 					if(i < 10){tag = "blaetter.00" + i;}
@@ -197,107 +200,81 @@ public class CubeScript : MonoBehaviour
 						leaves[i] = GameObject.Find(tag);
 						positions[i] = leaves[i].transform.localPosition;
 					}
-					catch(Exception e){
-						//Debug.Log(tag);
-					}
+					catch(Exception e){}
 				}
 				snow = GameObject.Find("Schnee").GetComponent<Renderer>();
 				check = true;
 			}
 
 			if(check){
+				angle = (int)transform.eulerAngles.y;		//Hohlt sich Y-Rotation des Markers
 
-				angle = (int)transform.eulerAngles.y;
-				//Debug.Log(angle );
-				//if(previousAngle > 350 && angle < 20){previousAngle = angle;}
-
-				//Debug.Log(changed[angle%60]);
-
-
-
-
-
-
-
-
-				Debug.Log(angle);
+				//Jahreszeiten und Übergänge (fast) immer gleich aufgebaut
 				if(angle >= 345 || angle < 15){	//Frühling
-					Debug.Log("HOLLA" + cCheck);
-					if(!cCheck){
-						Debug.Log("HOLLA");
-						colorCheckComplete(fruehling, 0);
-					}
-					if((angle) % 30 >= 15){changeControlFlag(true);}
-					else if((angle) % 30 < 15){changeControlFlag(false);}
-				}
+					if(!cCheck){colorCheckComplete(fruehling, 0);} 		//Beim Eintritt in Jahreszeit werden mit der colorCheckComplete Funktion die Blätter richtig eingefärbt/(de)aktiviert
+					if((angle) % 30 >= 15 && !changed[59]){changeControlFlag(true);}		//Setzt beim Verlassen in Vorgänger Übergang das change Array auf false	
+					else if((angle) % 30 < 15 && changed[59]){changeControlFlag(false);}	//Setzt beim Verlassen in Nachfolgendem Übergang das change Array auf true
+				}										//Im Frühling Reihenfolge des change Arrays veränderung umgedreht durch Position am Wechsel von 345° auf 15°
 
-
-
-
-				if(angle >= 15 && angle < 75){   //F->S
-					if(cCheck){colorCheckComplete(Color.black, 0);}
-					if(previousAngle <= angle){changeColor(angle, sommer);}
-					else{changeColor(angle, fruehling, previousAngle);}
+				if(angle >= 15 && angle < 75){   //Frühling zu Sommer
+					if(cCheck){colorCheckComplete(Color.black, 0);}				//Setzt cCheck zurück auf false
+					if(previousAngle <= angle){changeColor(angle, sommer);}			//Wenn Vorwärts gedreht werden Blätter in den Farben/Aktivierungszustand der darauf folgenden Jahreszeit dargestellt
+					else{changeColor(angle, fruehling, previousAngle);}			//Wenn Rückwärts gedreht werden Blätter in den Farben/Aktivierungszustand der darauf vorherigen Jahreszeit dargestellt
 				}
 
 				if(angle >= 75 && angle < 105){	//Sommer
 					if(!cCheck){colorCheckComplete(sommer);}
-
 					if((angle - 15) % 30 > 15){changeControlFlag(false);}
-
 					else if((angle - 15) % 30 < 15){changeControlFlag(true);}
 				}
 
 
-				if(angle >= 105 && angle < 165){   //S->H
+				if(angle >= 105 && angle < 165){   //Sommer zu Herbst
 					if(cCheck){colorCheckComplete(Color.black, 0);}
+					if(herbstCheck){herbstCheck = false;}					//Verändert herbstCheck
 					if(previousAngle <= angle){changeColor(angle, herbst);}
 					else{changeColor(angle, sommer, previousAngle);}
 				}
 
 				if(angle >= 165 && angle < 195){ //Herbst
 					if(!cCheck){colorCheckComplete(herbst, 0);}
-					if(!herbstCheck){herbstCheck = true;}
+					if(!herbstCheck){herbstCheck = true;} 					//Verändert herbstCheck
 					if((angle - 15) % 30 > 15){changeControlFlag(false);}
 					else if((angle - 15) % 30 < 15){changeControlFlag(true);}
 				}
 
-				if(angle >= 195 && angle < 255){   //H->W
+				if(angle >= 195 && angle < 255){   //Herbst zu Winter
 					if(cCheck){colorCheckComplete(Color.black, 0);}
 					if(previousAngle <= angle){
-						fallingLeavesStart(angle);
+						fallingLeavesStart(angle);					//Startet beim Vorwärts drehen die Blätterfallanimation und die Coroutine
 					}
 					else{
-						changePosition(herbst, angle, previousAngle, true);
+						changePosition(herbst, angle, previousAngle, true);		//Reaktiviert beim Rückwärts drehen die Blätter
 					}
 				}
 
 				if(angle >= 255 && angle < 285){ //Winter
-					if(!cCheck){
-						colorCheckComplete(fruehling, -1);
-					}
+					if(!cCheck){colorCheckComplete(fruehling, -1);				}
 					if((angle - 15) % 30 > 15){
 						changeControlFlag(false);
-						if(herbstCheck){
-							colorChangeComplete(fruehling);
+						if(herbstCheck){						//Färbt Blätter in Farbe herbst ein
+							colorChangeComplete(fruehling);				//Dient zur Prävention wenn Baum Rückwärts gedreht wird das Blätter die Falsche Farbe besitzen bei der Reaktivierung
 							herbstCheck = false;
 						}
 					}
 					else if((angle - 15) % 30 < 15){
 						changeControlFlag(true);
-						if(!herbstCheck){
+						if(!herbstCheck){						//Färbt Blätter in Farbe fruehling ein
 							colorChangeComplete(herbst);
 							herbstCheck = true;
 						}
 					
 					}
-					if(!snow.enabled){snow.enabled = true;}
+					if(!snow.enabled){snow.enabled = true;}					//Aktiviert Schneepartikeleffekt
 				}
 
-				if(angle >= 285 && angle < 345){ //W->F
-					if(cCheck){
-						Debug.Log("W->F");
-						colorCheckComplete(Color.black, 0);}
+				if(angle >= 285 && angle < 345){ //Winter zu Frühling
+					if(cCheck){colorCheckComplete(Color.black, 0);}
 					if(previousAngle <= angle){
 						changePosition(fruehling, angle);
 						changeColor(angle, fruehling);}
@@ -306,29 +283,12 @@ public class CubeScript : MonoBehaviour
 					}
 				}
 
-				if((angle < 254 || angle > 285) && snow.enabled){snow.enabled = false;}
+				if((angle < 254 || angle > 285) && snow.enabled){snow.enabled = false;}		//Deaktiviert Schneepartikeleffekt
 					
 
-				previousAngle = angle;		
+				previousAngle = angle;								//Speichert aktuellen angle in previousAngle zum prüfen der Drehrichtung		
 			}
 
-		}
-	}
-
-
-
-
-
-
-	public IEnumerator deactivateLeaves(int number){
-		yield return new WaitForSeconds(1.3f);
-		changed[number] = true;
-		for(int i = 0; i <= count; i++){
-			try{
-				leaves[number + 90 * i].GetComponent<Renderer>().enabled = false;
-				if(number <= 30){leaves[number + 60 + 90 * i].GetComponent<Renderer>().enabled = false;}
-			}
-			catch(Exception e){}
 		}
 	}
 }
