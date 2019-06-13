@@ -20,11 +20,11 @@ public class CubeScript : MonoBehaviour
 
 	Renderer snow; 
 
-	IEnumerator[] coroutines = new IEnumerator[45];
+	IEnumerator[] coroutines = new IEnumerator[60];
 
 	Vector3[] positions = new Vector3[numberOfLeaves];
 
-	bool[] changed = new bool[45];
+	bool[] changed = new bool[60];
 	bool tracked = false;
 	bool check = false;
 	bool cCheck;
@@ -41,18 +41,18 @@ public class CubeScript : MonoBehaviour
 
 
 	public void changeColor(int angle, Color color, int startPoint = 0){
-		if(startPoint == 0){
-			for(int i = 0; i <= angle % 45; i++){
+		angle = (angle - 15) % 90;
+		if(startPoint == 0 && angle < 60){
+			for(int i = 0; i <= angle; i++){
 				if(!changed[i]){
-					//Debug.Log(i + " : " + color);
 					changed[i] = true;
 					colorChangeRoutine(i, color);
 				}
 			}
 		}
-		else{
-			if(startPoint % 45 > 5){
-				for(int i = startPoint % 45; i < 45; i++){
+		else if(startPoint - 15 > 0){
+			if((startPoint - 15) % 90 > 5 && (startPoint - 15) % 90 <= 60){
+				for(int i = (startPoint - 15) % 90; i < 60; i++){
 					if(changed[i]){
 						changed[i] = false;
 						colorChangeRoutine(i, color);
@@ -66,7 +66,7 @@ public class CubeScript : MonoBehaviour
 		for(int j = 0; j <= count; j++){
 			try{
 				leaves[i + 90 * j].GetComponent<Renderer>().material.color = color;
-				leaves[i + 45 + 90 * j].GetComponent<Renderer>().material.color = color;
+				if(i < 30){leaves[i + 60 + 90 * j].GetComponent<Renderer>().material.color = color;}
 			}
 			catch(Exception e){}
 		}
@@ -90,7 +90,7 @@ public class CubeScript : MonoBehaviour
 	}
 
 	public void changeControlFlag(bool flag){
-		for(int i = 0; i < 45; i++){
+		for(int i = 0; i < 60; i++){
 			changed[i] = flag;
 		}
 	}
@@ -120,58 +120,57 @@ public class CubeScript : MonoBehaviour
 	}
 
 	public void fallingLeavesStart(int angle){
-		for(int i = 0; i <= angle % 45; i++){
-			if(!changed[i] && leaves[i] != null){
-				if(leaves[i].GetComponent<Renderer>().enabled && !leaves[i].GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("fallingLeave")){
-					for(int j = 0; j <= count; j++){
-						try{
-							leaves[i + 90 * j].GetComponent<Animator>().Play("fallingLeave");
-							leaves[i + 45 + 90 * j].GetComponent<Animator>().Play("fallingLeave");
-
+		
+		if((angle - 15) % 90 <= 60){
+			for(int i = 0; i <= (angle - 15) % 90; i++){
+				if(!changed[i] && leaves[i] != null){
+					if(leaves[i].GetComponent<Renderer>().enabled && !leaves[i].GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("fallingLeave")){
+						for(int j = 0; j <= count; j++){
+							try{
+								leaves[i + 90 * j].GetComponent<Animator>().Play("fallingLeave");
+								if(i <= 30){leaves[i + 60 + 90 * j].GetComponent<Animator>().Play("fallingLeave");}
+							}
+							catch(Exception e){}
 						}
-						catch(Exception e){}
+						StartCoroutine(coroutines[i]);
 					}
-					StartCoroutine(coroutines[i]);
-
 				}
 			}
 		}
-
 	}
 
-	public void changePosition(Color color, int i, int startPoint = 0, bool deactiveFlag = true){
-		if(startPoint == 0){
-			for(int j = 0; j <= i % 45; j++){
+	public void changePosition(Color color, int angle, int startPoint = 0, bool deactiveFlag = true){
+		angle = (angle - 15) % 90;
+		if(startPoint == 0 && angle <= 60){
+			for(int j = 0; j < angle; j++){
 				try{
 					if(deactiveFlag){
-						leaves[i + 90 * j].transform.localPosition = positions[i + 90 * j];
-						leaves[i + 45 + 90 * j].transform.localPosition = positions[i + 90 * j];
-						leaves[i + 90 * j].GetComponent<Renderer>().enabled = true;
-						leaves[i + 45 + 90 * j].GetComponent<Renderer>().enabled = true;
+						leaves[angle + 90 * j].transform.localPosition = positions[angle + 90 * j];
+						leaves[angle + 90 * j].GetComponent<Renderer>().enabled = true;
+						if(angle <= 30){
+							leaves[angle + 60 + 90 * j].transform.localPosition = positions[angle + 90 * j];
+							leaves[angle + 60 + 90 * j].GetComponent<Renderer>().enabled = true;
+						}
 						if(color != Color.black){
-							changeColor(i, color);
+							changeColor(angle, color);
 						}
 					}
 				}
 				catch(Exception e){}	
 			}
-			changed[i % 45] = true;
+			changed[angle] = true;
 		}
-		else if(startPoint > 5){
-			if(startPoint % 45 > 5){
-				//Debug.Log("DF: " + deactiveFlag + " Changed: " + changed[i % 45]);
-				if(changed[i % 45]){
-					//Debug.Log(startPoint % 45 + " SP");
-					for(int j = startPoint % 45; j < 45; j++){
-						try{
-							//Debug.Log(i + "HASS");
-							leaves[i + 90 * j].GetComponent<Renderer>().enabled = deactiveFlag;
-							leaves[i + 45 + 90 * j].GetComponent<Renderer>().enabled = deactiveFlag;
-						}
-						catch(Exception e){}
+		else if((startPoint - 15) % 90 > 5 && (startPoint - 15) % 90 <= 60 && angle <= 60){
+			if(changed[angle]){
+				for(int j = startPoint % 90; j < 60; j++){
+					try{
+						//Debug.Log(i + "HASS");
+						leaves[angle + 90 * j].GetComponent<Renderer>().enabled = deactiveFlag;
+						if(angle <= 30){leaves[angle + 60 + 90 * j].GetComponent<Renderer>().enabled = deactiveFlag;}
 					}
-					changed[i % 45] = false;
+					catch(Exception e){}
 				}
+				changed[angle] = false;
 			}
 		}
 	}
@@ -183,10 +182,11 @@ public class CubeScript : MonoBehaviour
 		tracked = TrackingsScript.tracked;
 		if(tracked){
 			if(!check){
+				
 				angle = (int)transform.eulerAngles.y;
-				if(angle % 90 >= 45){cCheck = true;}
+				if(angle % 90 >= 15 && angle % 90 < 75){cCheck = true;} 
 				string tag;
-				for(int i = 0; i < 45; i++){
+				for(int i = 0; i < 60; i++){
 					coroutines[i] = deactivateLeaves(i);
 				}
 				for(int i = 1; i <= numberOfLeaves; i++){
@@ -211,6 +211,7 @@ public class CubeScript : MonoBehaviour
 				//Debug.Log(angle );
 				//if(previousAngle > 350 && angle < 20){previousAngle = angle;}
 
+				//Debug.Log(changed[angle%60]);
 
 
 
@@ -219,45 +220,49 @@ public class CubeScript : MonoBehaviour
 
 
 
-
-
-				if(angle >= 0 && angle < 45){	//Frühling
-					if(!cCheck){colorCheckComplete(fruehling, 0);}
-					if(angle % 45 > 22){changeControlFlag(false);}
-					else if(angle % 45 < 22){changeControlFlag(true);}
+				Debug.Log(angle);
+				if(angle >= 345 || angle < 15){	//Frühling
+					Debug.Log("HOLLA" + cCheck);
+					if(!cCheck){
+						Debug.Log("HOLLA");
+						colorCheckComplete(fruehling, 0);
+					}
+					if((angle) % 30 >= 15){changeControlFlag(true);}
+					else if((angle) % 30 < 15){changeControlFlag(false);}
 				}
 
 
 
 
-				if(angle >= 45 && angle < 90){   //F->S
+				if(angle >= 15 && angle < 75){   //F->S
 					if(cCheck){colorCheckComplete(Color.black, 0);}
 					if(previousAngle <= angle){changeColor(angle, sommer);}
 					else{changeColor(angle, fruehling, previousAngle);}
 				}
 
-				if(angle >= 90 && angle < 135){	//Sommer
+				if(angle >= 75 && angle < 105){	//Sommer
 					if(!cCheck){colorCheckComplete(sommer);}
 
-					if(angle % 45 > 22){changeControlFlag(false);}
+					if((angle - 15) % 30 > 15){changeControlFlag(false);}
 
-					else if(angle % 45 < 22){changeControlFlag(true);}
+					else if((angle - 15) % 30 < 15){changeControlFlag(true);}
 				}
 
 
-				if(angle >= 135 && angle < 180){   //S->H
+				if(angle >= 105 && angle < 165){   //S->H
 					if(cCheck){colorCheckComplete(Color.black, 0);}
 					if(previousAngle <= angle){changeColor(angle, herbst);}
-					else{changeColor(angle, sommer, previousAngle);}}
-
-				if(angle >= 180 && angle < 225){ //Herbst
-					if(!cCheck){colorCheckComplete(herbst, 0);}
-					if(!herbstCheck){herbstCheck = true;}
-					if(angle % 45 > 22){changeControlFlag(false);}
-					else if(angle % 45 < 22){changeControlFlag(true);}
+					else{changeColor(angle, sommer, previousAngle);}
 				}
 
-				if(angle >= 225 && angle < 270){   //H->W
+				if(angle >= 165 && angle < 195){ //Herbst
+					if(!cCheck){colorCheckComplete(herbst, 0);}
+					if(!herbstCheck){herbstCheck = true;}
+					if((angle - 15) % 30 > 15){changeControlFlag(false);}
+					else if((angle - 15) % 30 < 15){changeControlFlag(true);}
+				}
+
+				if(angle >= 195 && angle < 255){   //H->W
 					if(cCheck){colorCheckComplete(Color.black, 0);}
 					if(previousAngle <= angle){
 						fallingLeavesStart(angle);
@@ -267,18 +272,18 @@ public class CubeScript : MonoBehaviour
 					}
 				}
 
-				if(angle >= 270 && angle < 315){ //Winter
+				if(angle >= 255 && angle < 285){ //Winter
 					if(!cCheck){
 						colorCheckComplete(fruehling, -1);
 					}
-					if(angle % 45 > 22){
+					if((angle - 15) % 30 > 15){
 						changeControlFlag(false);
 						if(herbstCheck){
 							colorChangeComplete(fruehling);
 							herbstCheck = false;
 						}
 					}
-					else if(angle % 45 < 22){
+					else if((angle - 15) % 30 < 15){
 						changeControlFlag(true);
 						if(!herbstCheck){
 							colorChangeComplete(herbst);
@@ -289,8 +294,10 @@ public class CubeScript : MonoBehaviour
 					if(!snow.enabled){snow.enabled = true;}
 				}
 
-				if(angle >= 315 && angle < 360){ //W->F
-					if(cCheck){colorCheckComplete(Color.black, 0);}
+				if(angle >= 285 && angle < 345){ //W->F
+					if(cCheck){
+						Debug.Log("W->F");
+						colorCheckComplete(Color.black, 0);}
 					if(previousAngle <= angle){
 						changePosition(fruehling, angle);
 						changeColor(angle, fruehling);}
@@ -299,7 +306,7 @@ public class CubeScript : MonoBehaviour
 					}
 				}
 
-				if(angle < 270 && snow.enabled){snow.enabled = false;}
+				if((angle < 254 || angle > 285) && snow.enabled){snow.enabled = false;}
 					
 
 				previousAngle = angle;		
@@ -319,7 +326,7 @@ public class CubeScript : MonoBehaviour
 		for(int i = 0; i <= count; i++){
 			try{
 				leaves[number + 90 * i].GetComponent<Renderer>().enabled = false;
-				leaves[number + 45 + 90 * i].GetComponent<Renderer>().enabled = false;
+				if(number <= 30){leaves[number + 60 + 90 * i].GetComponent<Renderer>().enabled = false;}
 			}
 			catch(Exception e){}
 		}
