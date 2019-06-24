@@ -21,18 +21,25 @@ public class BaumScript : MonoBehaviour
 	Renderer snow; 
 
 	IEnumerator[] coroutines = new IEnumerator[60];
+	IEnumerator audioCoroutine;
 
 	Vector3[] positions = new Vector3[numberOfLeaves];
 
 	bool[] changed = new bool[60];
 	bool tracked = false;
 	bool check = false;
-	bool cCheck;
+	bool cCheck = false;
 	bool herbstCheck = false;
+	bool herbstAudioPlaying = false;
+	bool audioChanged = false;
 
 	Color fruehling = new Color(0f,1f,0.314f);
 	Color sommer = new Color(0.008f, 0.808f, 0f);
 	Color herbst = new Color(0.808f, 0.475f, 0.039f);
+
+	public AudioClip[] jahreszeiten = new AudioClip[5];
+	public AudioSource backgroundNoise;
+
 
 	void Start(){}
 
@@ -74,7 +81,7 @@ public class BaumScript : MonoBehaviour
 			catch(Exception e){}
 		}
 	}
-		
+
 	public void changePositionComplete(){					//Macht Blätter sichtbar und verändert ihre Position (durch Animation verändert)
 		for(int j = 0; j <= numberOfLeaves; j++){
 			try{
@@ -116,7 +123,7 @@ public class BaumScript : MonoBehaviour
 	}
 
 	public void fallingLeavesStart(int angle){				//Startet Animation der Blätter zum abfallen
-		
+
 		if((angle - 15) % 90 <= 60){
 			for(int i = 0; i <= (angle - 15) % 90; i++){
 				if(!changed[i] && leaves[i] != null){
@@ -128,8 +135,15 @@ public class BaumScript : MonoBehaviour
 							}
 							catch(Exception e){}
 						}
+
 						StartCoroutine(coroutines[i]);	//Startet Coroutine
 					}
+				}
+				if(!herbstAudioPlaying){
+					herbstAudioPlaying = true;
+					backgroundNoise.PlayOneShot(jahreszeiten[4], 0.05f);
+					StartCoroutine(soundLeaves());
+					Debug.Log("HALLO");
 				}
 			}
 		}
@@ -181,16 +195,62 @@ public class BaumScript : MonoBehaviour
 			catch(Exception e){}
 		}
 	}
-		
+
+	public IEnumerator soundLeaves(){							//Coroutine damit Blätter nach Animation verschwinden
+		yield return new WaitForSeconds(3f);								//Animation dauert 1s und deaktivierung erfolgt nach 1.3s
+		herbstAudioPlaying = false;
+	}
+
+
+	public void changeVolumne(int angle, AudioClip jahreszeit){
+		if(!backgroundNoise.isPlaying){
+			Debug.Log("NUN" + jahreszeit + " d");
+
+			backgroundNoise.clip = jahreszeit;
+			backgroundNoise.Play();
+		}
+		else{
+			angle = (angle - 15) % 90;
+			if(angle < 30){
+				if(audioChanged){
+					backgroundNoise.Pause();
+					backgroundNoise.clip = jahreszeit;
+					backgroundNoise.Play();
+					audioChanged = false;
+				}
+				backgroundNoise.volume = 1f - 1f * ((angle % 30f) / 29f);
+				//Debug.Log((1f - 1f * ((angle % 30f) / 29f)));
+			}
+			else if(angle >= 30){
+				if(!audioChanged){
+					backgroundNoise.Pause();
+					backgroundNoise.clip = jahreszeit;
+					backgroundNoise.Play();
+					audioChanged = true;
+				}
+				backgroundNoise.volume = 1f * ((angle % 30f) / 29f);
+			}
+		}
+	}
+
+	public void audioChangeCall(int angle, AudioClip actual, AudioClip next){
+		if((angle - 15) % 90 < 30){changeVolumne(angle, actual);}
+		else{changeVolumne(angle, next);}
+	}
+
 	void Update(){
 		tracked = TrackingsScript.tracked;
 		if(tracked){
-			if(!check){						//Wird beim ersten Erkennen des Baums aufgerufen. Füllt Arrayss
+			if(!check){							//Wird beim ersten Erkennen des Baums aufgerufen. Füllt Arrays und Variablen
+				//backgroundNoise = GameObject.GetComponent<AudioSource>();
 				angle = (int)transform.eulerAngles.y;
-				if(angle % 90 >= 15 && angle % 90 < 75){cCheck = true;} //Prüft ob Baum in Jahreszeit oder Übergang ist 
+				if(angle % 90 >= 15 && angle % 90 < 74){
+					cCheck = true;
+					if((angle - 15) % 90 < 30){audioChanged = true;}
+				} //Prüft ob Baum in Jahreszeit oder Übergang ist 
 				string tag;
 				for(int i = 0; i < 60; i++){
-					coroutines[i] = deactivateLeaves(i);	//Versieht Coroutinen mit ihrer Funktion 
+					coroutines[i] = deactivateLeaves(i);		//Versieht Coroutinen mit ihrer Funktion 
 				}
 				for(int i = 1; i <= numberOfLeaves; i++){
 					if(i < 10){tag = "blaetter.00" + i;}
@@ -204,19 +264,24 @@ public class BaumScript : MonoBehaviour
 				}
 				snow = GameObject.Find("Schnee").GetComponent<Renderer>();
 				check = true;
+				audioCoroutine = soundLeaves();
 			}
 
 			if(check){
 				angle = (int)transform.eulerAngles.y;		//Hohlt sich Y-Rotation des Markers
+				Debug.Log(backgroundNoise.isPlaying + " : " + audioChanged);
 
 				//Jahreszeiten und Übergänge (fast) immer gleich aufgebaut
 				if(angle >= 345 || angle < 15){	//Frühling
 					if(!cCheck){colorCheckComplete(fruehling, 0);} 		//Beim Eintritt in Jahreszeit werden mit der colorCheckComplete Funktion die Blätter richtig eingefärbt/(de)aktiviert
-					if((angle) % 30 >= 15 && !changed[59]){changeControlFlag(true);}		//Setzt beim Verlassen in Vorgänger Übergang das change Array auf false	
+					if(audioChanged){audioChanged = false;}
+					if(!backgroundNoise.isPlaying){changeVolumne(74, jahreszeiten[0]);}	//Falls beim Aufruf in Jahreszeit, startet die richtige Hintergrund Musik
+					if((angle) % 30 >= 15 && !changed[59]){changeControlFlag(true);}	//Setzt beim Verlassen in Vorgänger Übergang das change Array auf false	
 					else if((angle) % 30 < 15 && changed[59]){changeControlFlag(false);}	//Setzt beim Verlassen in Nachfolgendem Übergang das change Array auf true
 				}										//Im Frühling Reihenfolge des change Arrays veränderung umgedreht durch Position am Wechsel von 345° auf 15°
 
 				if(angle >= 15 && angle < 75){   //Frühling zu Sommer
+					audioChangeCall(angle, jahreszeiten[0], jahreszeiten[1]);
 					if(cCheck){colorCheckComplete(Color.black, 0);}				//Setzt cCheck zurück auf false
 					if(previousAngle <= angle){changeColor(angle, sommer);}			//Wenn Vorwärts gedreht werden Blätter in den Farben/Aktivierungszustand der darauf folgenden Jahreszeit dargestellt
 					else{changeColor(angle, fruehling, previousAngle);}			//Wenn Rückwärts gedreht werden Blätter in den Farben/Aktivierungszustand der darauf vorherigen Jahreszeit dargestellt
@@ -224,12 +289,15 @@ public class BaumScript : MonoBehaviour
 
 				if(angle >= 75 && angle < 105){	//Sommer
 					if(!cCheck){colorCheckComplete(sommer);}
+					if(audioChanged){audioChanged = false;}
+					if(!backgroundNoise.isPlaying){changeVolumne(74, jahreszeiten[1]);}	//Falls beim Aufruf in Jahreszeit, startet die richtige Hintergrund Musik
 					if((angle - 15) % 30 > 15){changeControlFlag(false);}
 					else if((angle - 15) % 30 < 15){changeControlFlag(true);}
 				}
 
 
 				if(angle >= 105 && angle < 165){   //Sommer zu Herbst
+					audioChangeCall(angle, jahreszeiten[1], jahreszeiten[2]);
 					if(cCheck){colorCheckComplete(Color.black, 0);}
 					if(herbstCheck){herbstCheck = false;}					//Verändert herbstCheck
 					if(previousAngle <= angle){changeColor(angle, herbst);}
@@ -238,12 +306,15 @@ public class BaumScript : MonoBehaviour
 
 				if(angle >= 165 && angle < 195){ //Herbst
 					if(!cCheck){colorCheckComplete(herbst, 0);}
+					if(audioChanged){audioChanged = false;}
+					if(!backgroundNoise.isPlaying){changeVolumne(74, jahreszeiten[2]);}	//Falls beim Aufruf in Jahreszeit, startet die richtige Hintergrund Musik
 					if(!herbstCheck){herbstCheck = true;} 					//Verändert herbstCheck
 					if((angle - 15) % 30 > 15){changeControlFlag(false);}
 					else if((angle - 15) % 30 < 15){changeControlFlag(true);}
 				}
 
 				if(angle >= 195 && angle < 255){   //Herbst zu Winter
+					audioChangeCall(angle, jahreszeiten[2], jahreszeiten[3]);
 					if(cCheck){colorCheckComplete(Color.black, 0);}
 					if(previousAngle <= angle){
 						fallingLeavesStart(angle);					//Startet beim Vorwärts drehen die Blätterfallanimation und die Coroutine
@@ -255,6 +326,8 @@ public class BaumScript : MonoBehaviour
 
 				if(angle >= 255 && angle < 285){ //Winter
 					if(!cCheck){colorCheckComplete(fruehling, -1);				}
+					if(audioChanged){audioChanged = false;}
+					if(!backgroundNoise.isPlaying){changeVolumne(74, jahreszeiten[3]);}	//Falls beim Aufruf in Jahreszeit, startet die richtige Hintergrund Musik
 					if((angle - 15) % 30 > 15){
 						changeControlFlag(false);
 						if(herbstCheck){						//Färbt Blätter in Farbe herbst ein
@@ -268,12 +341,13 @@ public class BaumScript : MonoBehaviour
 							colorChangeComplete(herbst);
 							herbstCheck = true;
 						}
-					
+
 					}
 					if(!snow.enabled){snow.enabled = true;}					//Aktiviert Schneepartikeleffekt
 				}
 
 				if(angle >= 285 && angle < 345){ //Winter zu Frühling
+					audioChangeCall(angle, jahreszeiten[3], jahreszeiten[0]);
 					if(cCheck){colorCheckComplete(Color.black, 0);}
 					if(previousAngle <= angle){
 						changePosition(fruehling, angle);
@@ -284,7 +358,7 @@ public class BaumScript : MonoBehaviour
 				}
 
 				if((angle < 254 || angle > 285) && snow.enabled){snow.enabled = false;}		//Deaktiviert Schneepartikeleffekt
-					
+
 
 				previousAngle = angle;								//Speichert aktuellen angle in previousAngle zum prüfen der Drehrichtung		
 			}
@@ -315,4 +389,3 @@ public class BaumScript : MonoBehaviour
 
 
 
-					
