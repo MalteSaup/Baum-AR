@@ -53,18 +53,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\BaumScript.cs" />
-     <Compile Include="Assets\TankScript.cs" />
-     <Compile Include="Assets\TrackingsScript.cs" />
+     <Compile Include="Assets\Scripts\BaumScript.cs" />
+     <Compile Include="Assets\Scripts\TrackingsScript.cs" />
      <None Include="Assets\Vuforia\Shaders\ColoredLines.shader" />
      <None Include="Assets\Vuforia\Shaders\CameraDiffuse.shader" />
      <None Include="Assets\Vuforia\Shaders\VertexLitWithZ.shader" />
-     <None Include="Assets\marker\BaumARMarker.xml" />
      <None Include="Assets\Vuforia\Shaders\VideoBackground.shader" />
-     <None Include="Assets\StreamingAssets\Vuforia\BaumARMarker.xml" />
      <None Include="Assets\Vuforia\Shaders\OutlineOpaque.shader" />
      <None Include="Assets\StreamingAssets\Vuforia\baumtest_OT.xml" />
-     <None Include="Assets\StreamingAssets\Vuforia\BaumTargetGreg_OT.xml" />
      <None Include="Assets\Vuforia\Shaders\DepthMask.shader" />
      <None Include="Assets\Vuforia\Databases\Emulator\VuforiaEmulator.xml" />
      <None Include="Assets\StreamingAssets\Vuforia\VuforiaMars_Images.xml" />
